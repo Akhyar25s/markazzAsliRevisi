@@ -60,4 +60,15 @@ Route::middleware('auth')->group(function () {
             return view('admin-jamaah.buat-jadwal');
         })->name('admin-jamaah.buat-jadwal');
     });
+
+    // Anggota Jamaah Routes
+    Route::middleware('role:anggota_jamaah')->prefix('anggota-jamaah')->group(function () {
+        Route::get('absen-kegiatan', function () {
+            return view('anggota-jamaah.absen-kegiatan');
+        })->name('anggota-jamaah.absen-kegiatan');
+
+        Route::get('itikaf', function () {
+            return view('anggota-jamaah.itikaf');
+        })->name('anggota-jamaah.itikaf');
+    });
 });

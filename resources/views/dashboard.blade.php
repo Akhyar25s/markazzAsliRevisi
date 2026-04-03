@@ -361,11 +361,8 @@
                 <li><a href="{{ route('admin-jamaah.rekap-laporan') }}">Rekap Laporan</a></li>
                 <li><a href="{{ route('admin-jamaah.kelompok-itikaf') }}">Kelompok I'tikaf</a></li>
             @else
-                <li><a href="#absen-kegiatan">Absen Kegiatan</a></li>
-                <li><a href="#absen-itikaf">Absen I'tikaf</a></li>
-                <li><a href="#jadwal">Jadwal</a></li>
-                <li><a href="#keaktifan">Keaktifan</a></li>
-                <li><a href="#laporan">Laporan</a></li>
+                <li><a href="{{ route('anggota-jamaah.absen-kegiatan') }}">Absen Kegiatan</a></li>
+                <li><a href="{{ route('anggota-jamaah.itikaf') }}">I'tikaf</a></li>
             @endif
             
             <li><a href="#profil">Profil</a></li>
@@ -483,34 +480,16 @@
 
             @else
                 <!-- Anggota Jamaah Menu -->
-                <a href="#absen-kegiatan" class="menu-card">
+                <a href="{{ route('anggota-jamaah.absen-kegiatan') }}" class="menu-card">
                     <div class="menu-card-icon">📋</div>
                     <h3>Absen Kegiatan</h3>
-                    <p>Absensi kehadiran pada kegiatan rutin masjid dengan verifikasi wajah.</p>
+                    <p>Tambah kegiatan bebas, set lokasi melalui peta, lalu scan wajah untuk validasi.</p>
                 </a>
 
-                <a href="#absen-itikaf" class="menu-card">
+                <a href="{{ route('anggota-jamaah.itikaf') }}" class="menu-card">
                     <div class="menu-card-icon">🕌</div>
-                    <h3>Absen I'tikaf</h3>
-                    <p>Pencatatan kehadiran khusus kegiatan I'tikaf Ramadan.</p>
-                </a>
-
-                <a href="#jadwal" class="menu-card">
-                    <div class="menu-card-icon">📅</div>
-                    <h3>Jadwal</h3>
-                    <p>Lihat jadwal kegiatan dan program yang akan datang.</p>
-                </a>
-
-                <a href="#keaktifan" class="menu-card">
-                    <div class="menu-card-icon">📊</div>
-                    <h3>Keaktifan</h3>
-                    <p>Pantau tingkat keaktifan dan partisipasi Anda.</p>
-                </a>
-
-                <a href="#laporan" class="menu-card">
-                    <div class="menu-card-icon">📈</div>
-                    <h3>Laporan</h3>
-                    <p>Download laporan kehadiran dan aktivitas Anda.</p>
+                    <h3>I'tikaf</h3>
+                    <p>Lihat jadwal i'tikaf, absen khusus i'tikaf, dan status anggota dalam kelompok.</p>
                 </a>
             @endif
 
