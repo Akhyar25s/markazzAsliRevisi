@@ -352,11 +352,21 @@
     <div class="sidebar">
         <ul class="sidebar-menu">
             <li><a href="{{ route('dashboard') }}" class="active">Dashboard</a></li>
-            <li><a href="#absen-kegiatan">Absen Kegiatan</a></li>
-            <li><a href="#absen-itikaf">Absen I'tikaf</a></li>
-            <li><a href="#jadwal">Jadwal</a></li>
-            <li><a href="#keaktifan">Keaktifan</a></li>
-            <li><a href="#laporan">Laporan</a></li>
+            
+            @if(Auth::user()->role === 'admin_masjid')
+                <li><a href="{{ route('admin-masjid.kelola-pengguna') }}">Kelola Pengguna</a></li>
+                <li><a href="{{ route('admin-masjid.rekap-laporan') }}">Rekap Laporan</a></li>
+            @elseif(Auth::user()->role === 'admin_jamaah')
+                <li><a href="#kelola-jamaah">Kelola Jamaah</a></li>
+                <li><a href="#laporan-jamaah">Laporan Jamaah</a></li>
+            @else
+                <li><a href="#absen-kegiatan">Absen Kegiatan</a></li>
+                <li><a href="#absen-itikaf">Absen I'tikaf</a></li>
+                <li><a href="#jadwal">Jadwal</a></li>
+                <li><a href="#keaktifan">Keaktifan</a></li>
+                <li><a href="#laporan">Laporan</a></li>
+            @endif
+            
             <li><a href="#profil">Profil</a></li>
         </ul>
     </div>
@@ -366,61 +376,142 @@
         <!-- Welcome Section -->
         <div class="welcome-box">
             <h2>Selamat Datang, {{ Auth::user()->nama }}!</h2>
-            <p>Kelola kehadiran dan aktivitas kegiatan Anda dengan mudah melalui sistem Markaz.</p>
+            <p>
+                @if(Auth::user()->role === 'admin_masjid')
+                    Kelola sistem masjid dan semua pengguna dengan mudah.
+                @elseif(Auth::user()->role === 'admin_jamaah')
+                    Kelola anggota jamaah dan kegiatan dengan mudah.
+                @else
+                    Kelola kehadiran dan aktivitas kegiatan Anda dengan mudah melalui sistem Markaz.
+                @endif
+            </p>
         </div>
 
         <!-- Stats -->
         <div class="stats-grid">
-            <div class="stat-card">
-                <h4>Kehadiran Bulan Ini</h4>
-                <div class="stat-value">8</div>
-            </div>
-            <div class="stat-card">
-                <h4>I'tikaf Tahun Ini</h4>
-                <div class="stat-value">2</div>
-            </div>
-            <div class="stat-card">
-                <h4>Tingkat Keaktifan</h4>
-                <div class="stat-value">85%</div>
-            </div>
-            <div class="stat-card">
-                <h4>Status Wajah</h4>
-                <div class="stat-value">✓</div>
-            </div>
+            @if(Auth::user()->role === 'admin_masjid')
+                <div class="stat-card">
+                    <h4>Total Pengguna</h4>
+                    <div class="stat-value">24</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Admin Jamaah</h4>
+                    <div class="stat-value">3</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Total Jamaah</h4>
+                    <div class="stat-value">150</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Aktivitas Hari Ini</h4>
+                    <div class="stat-value">12</div>
+                </div>
+            @elseif(Auth::user()->role === 'admin_jamaah')
+                <div class="stat-card">
+                    <h4>Total Anggota</h4>
+                    <div class="stat-value">45</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Kehadiran Hari Ini</h4>
+                    <div class="stat-value">32</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Kegiatan Aktif</h4>
+                    <div class="stat-value">6</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Tingkat Kehadiran</h4>
+                    <div class="stat-value">71%</div>
+                </div>
+            @else
+                <div class="stat-card">
+                    <h4>Kehadiran Bulan Ini</h4>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-card">
+                    <h4>I'tikaf Tahun Ini</h4>
+                    <div class="stat-value">2</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Tingkat Keaktifan</h4>
+                    <div class="stat-value">85%</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Status Wajah</h4>
+                    <div class="stat-value">✓</div>
+                </div>
+            @endif
         </div>
 
         <!-- Menu Grid -->
         <h3 class="section-title">Menu Utama</h3>
         <div class="menu-grid">
-            <a href="#absen-kegiatan" class="menu-card">
-                <div class="menu-card-icon">📋</div>
-                <h3>Absen Kegiatan</h3>
-                <p>Absensi kehadiran pada kegiatan rutin masjid dengan verifikasi wajah.</p>
-            </a>
+            @if(Auth::user()->role === 'admin_masjid')
+                <!-- Admin Masjid Menu -->
+                <a href="{{ route('admin-masjid.kelola-pengguna') }}" class="menu-card">
+                    <div class="menu-card-icon">👥</div>
+                    <h3>Kelola Pengguna</h3>
+                    <p>Kelola semua pengguna sistem termasuk admin jamaah dan anggota.</p>
+                </a>
 
-            <a href="#absen-itikaf" class="menu-card">
-                <div class="menu-card-icon">🕌</div>
-                <h3>Absen I'tikaf</h3>
-                <p>Pencatatan kehadiran khusus kegiatan I'tikaf Ramadan.</p>
-            </a>
+                <a href="{{ route('admin-masjid.rekap-laporan') }}" class="menu-card">
+                    <div class="menu-card-icon">📊</div>
+                    <h3>Rekap Laporan</h3>
+                    <p>Lihat laporan kehadiran dan aktivitas semua jamaah.</p>
+                </a>
 
-            <a href="#jadwal" class="menu-card">
-                <div class="menu-card-icon">📅</div>
-                <h3>Jadwal</h3>
-                <p>Lihat jadwal kegiatan dan program yang akan datang.</p>
-            </a>
+            @elseif(Auth::user()->role === 'admin_jamaah')
+                <!-- Admin Jamaah Menu -->
+                <a href="#kelola-jamaah" class="menu-card">
+                    <div class="menu-card-icon">👨‍👩‍👧‍👦</div>
+                    <h3>Kelola Jamaah</h3>
+                    <p>Kelola anggota jamaah dan data anggota.</p>
+                </a>
 
-            <a href="#keaktifan" class="menu-card">
-                <div class="menu-card-icon">📊</div>
-                <h3>Keaktifan</h3>
-                <p>Pantau tingkat keaktifan dan partisipasi Anda.</p>
-            </a>
+                <a href="#kelola-kegiatan" class="menu-card">
+                    <div class="menu-card-icon">📅</div>
+                    <h3>Kelola Kegiatan</h3>
+                    <p>Buat dan kelola jadwal kegiatan jamaah.</p>
+                </a>
 
-            <a href="#laporan" class="menu-card">
-                <div class="menu-card-icon">📈</div>
-                <h3>Laporan</h3>
-                <p>Download laporan kehadiran dan aktivitas Anda.</p>
-            </a>
+                <a href="#laporan-jamaah" class="menu-card">
+                    <div class="menu-card-icon">📈</div>
+                    <h3>Laporan Jamaah</h3>
+                    <p>Laporan kehadiran dan aktivitas anggota jamaah.</p>
+                </a>
+
+            @else
+                <!-- Anggota Jamaah Menu -->
+                <a href="#absen-kegiatan" class="menu-card">
+                    <div class="menu-card-icon">📋</div>
+                    <h3>Absen Kegiatan</h3>
+                    <p>Absensi kehadiran pada kegiatan rutin masjid dengan verifikasi wajah.</p>
+                </a>
+
+                <a href="#absen-itikaf" class="menu-card">
+                    <div class="menu-card-icon">🕌</div>
+                    <h3>Absen I'tikaf</h3>
+                    <p>Pencatatan kehadiran khusus kegiatan I'tikaf Ramadan.</p>
+                </a>
+
+                <a href="#jadwal" class="menu-card">
+                    <div class="menu-card-icon">📅</div>
+                    <h3>Jadwal</h3>
+                    <p>Lihat jadwal kegiatan dan program yang akan datang.</p>
+                </a>
+
+                <a href="#keaktifan" class="menu-card">
+                    <div class="menu-card-icon">📊</div>
+                    <h3>Keaktifan</h3>
+                    <p>Pantau tingkat keaktifan dan partisipasi Anda.</p>
+                </a>
+
+                <a href="#laporan" class="menu-card">
+                    <div class="menu-card-icon">📈</div>
+                    <h3>Laporan</h3>
+                    <p>Download laporan kehadiran dan aktivitas Anda.</p>
+                </a>
+            @endif
 
             <a href="#profil" class="menu-card">
                 <div class="menu-card-icon">👤</div>

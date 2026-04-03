@@ -26,4 +26,20 @@ Route::post('/store-face-data', [AuthController::class, 'storeFaceData'])->name(
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Admin Masjid Routes
+    Route::middleware('role:admin_masjid')->prefix('admin-masjid')->group(function () {
+        Route::get('kelola-pengguna', function () {
+            return view('admin.kelola-pengguna');
+            })->name('admin-masjid.kelola-pengguna');
+
+        Route::get('rekap-laporan', function () {
+            return view('admin.rekap-laporan');
+            })->name('admin-masjid.rekap-laporan');
+    });
+
+    // Admin Jamaah Routes
+    Route::middleware('role:admin_jamaah')->prefix('admin-jamaah')->group(function () {
+        // Routes for admin jamaah will be added here
+    });
 });
