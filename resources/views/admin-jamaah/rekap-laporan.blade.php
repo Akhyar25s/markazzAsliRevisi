@@ -235,6 +235,16 @@
             flex-wrap: wrap;
         }
 
+        .send-options {
+            display: none;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .send-options.show {
+            display: flex;
+        }
+
         .actions button {
             border: none;
             background: #6e7983;
@@ -313,10 +323,12 @@
         </section>
 
         <div class="actions">
-            <button>Kirim</button>
-            <button>Berdasarkan Kegiatan</button>
-            <button>Berdasarkan Nama</button>
-            <button>Berdasarkan Tanggal/Bulan</button>
+            <button id="sendBtn" onclick="toggleSendOptions()">Kirim</button>
+            <div class="send-options" id="sendOptions">
+                <button onclick="filterByKegiatan()">Berdasarkan Kegiatan</button>
+                <button onclick="filterByNama()">Berdasarkan Nama</button>
+                <button onclick="filterByTanggal()">Berdasarkan Tanggal/Bulan</button>
+            </div>
         </div>
     </main>
 
@@ -324,6 +336,8 @@
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
+        const sendBtn = document.getElementById('sendBtn');
+        const sendOptions = document.getElementById('sendOptions');
 
         toggleSidebarBtn.addEventListener('click', function () {
             sidebar.classList.toggle('collapsed');
@@ -348,6 +362,30 @@
                 datasets: [{ data: [20, 28, 18, 34], backgroundColor: ['#1e8449', '#4ea86f', '#88c9a1', '#cce8d8'] }]
             },
             options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        function toggleSendOptions() {
+            const isShown = sendOptions.classList.toggle('show');
+            sendBtn.textContent = isShown ? 'Tutup Opsi' : 'Kirim';
+        }
+
+        function filterByKegiatan() {
+            alert('Kirim laporan berdasarkan kegiatan sedang dalam pengembangan');
+        }
+
+        function filterByNama() {
+            alert('Kirim laporan berdasarkan nama sedang dalam pengembangan');
+        }
+
+        function filterByTanggal() {
+            alert('Kirim laporan berdasarkan tanggal/bulan sedang dalam pengembangan');
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.actions')) {
+                sendOptions.classList.remove('show');
+                sendBtn.textContent = 'Kirim';
+            }
         });
     </script>
 </body>

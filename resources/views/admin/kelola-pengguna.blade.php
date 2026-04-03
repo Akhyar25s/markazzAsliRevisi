@@ -355,7 +355,7 @@
         }
 
         .btn-role {
-            background: #495057;
+            background: #2f7f4c;
             color: white;
             border: none;
             padding: 8px 12px;
@@ -369,7 +369,15 @@
         }
 
         .btn-role:hover {
-            background: #383d41;
+            background: #26693f;
+        }
+
+        .btn-role-secondary {
+            background: #5d8f6e;
+        }
+
+        .btn-role-secondary:hover {
+            background: #4d795e;
         }
 
         /* Modal */
@@ -439,7 +447,7 @@
         }
 
         .btn-cancel {
-            background: #6c757d;
+            background: #5d8f6e;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -450,7 +458,7 @@
         }
 
         .btn-cancel:hover {
-            background: #5a6268;
+            background: #4d795e;
         }
 
         .btn-submit {
@@ -466,6 +474,35 @@
 
         .btn-submit:hover {
             background: #1e8449;
+        }
+
+        .toast {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            min-width: 280px;
+            max-width: 360px;
+            background: #1e8449;
+            color: white;
+            padding: 12px 14px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            transform: translateY(-15px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.25s ease;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.error {
+            background: #c0392b;
         }
 
         /* Responsive */
@@ -556,7 +593,7 @@
                             <div class="user-detail">Sandi: <strong>••••••••••</strong></div>
                             <div class="user-extra">
                                 <div class="user-detail">Alamat: <strong>{{ $user->alamat ?? '-' }}</strong></div>
-                                <div class="user-detail">Role: <strong>{{ ucwords(str_replace('_', ' ', $user->role ?? '-')) }}</strong></div>
+                                <div class="user-detail">Role: <strong class="role-value">{{ ucwords(str_replace('_', ' ', $user->role ?? '-')) }}</strong></div>
                                 <div class="user-detail">Tanggal daftar: <strong>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</strong></div>
                             </div>
                         </div>
@@ -564,7 +601,7 @@
                     <div class="user-actions">
                         <button class="btn-delete" onclick="deleteUser('{{ $user->id }}')">🗑</button>
                         <button class="btn-role" onclick="openRoleModal('{{ $user->id }}', @js($user->nama), @js($user->role))">Ubah Role</button>
-                        <button class="btn-role btn-toggle-details" onclick="toggleUserDetails('{{ $user->id }}', this)" style="background: #6c757d;">Selengkapnya {{ $loop->first ? '▲' : '▼' }}</button>
+                        <button class="btn-role btn-role-secondary btn-toggle-details" onclick="toggleUserDetails('{{ $user->id }}', this)">Selengkapnya {{ $loop->first ? '▲' : '▼' }}</button>
                     </div>
                 </div>
             @empty
@@ -597,10 +634,17 @@
         </div>
     </div>
 
+    <div id="toast" class="toast"></div>
+
     <script>
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.querySelector('.main-content');
+        const roleModal = document.getElementById('roleModal');
+        const roleSelect = document.getElementById('roleSelect');
+        const toast = document.getElementById('toast');
+        let selectedUserId = null;
+        let selectedUserName = '';
 
         toggleSidebarBtn.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
@@ -619,14 +663,16 @@
         }
 
         function openRoleModal(userId, userName, currentRole) {
-            const modal = document.getElementById('roleModal');
-            modal.classList.add('active');
-            console.log('Ubah role untuk:', userId, userName, currentRole);
+            selectedUserId = userId;
+            selectedUserName = userName;
+            roleSelect.value = currentRole || '';
+            roleModal.classList.add('active');
         }
 
         function closeRoleModal() {
-            const modal = document.getElementById('roleModal');
-            modal.classList.remove('active');
+            roleModal.classList.remove('active');
+            selectedUserId = null;
+            selectedUserName = '';
         }
 
         function deleteUser(userId) {
@@ -653,17 +699,48 @@
             }
         }
 
+        function formatRoleLabel(roleValue) {
+            if (!roleValue) return '-';
+            return roleValue.replaceAll('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+        }
+
+        let toastTimer;
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.classList.remove('error');
+            if (type === 'error') {
+                toast.classList.add('error');
+            }
+            toast.classList.add('show');
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2400);
+        }
+
         document.getElementById('roleForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const role = document.getElementById('roleSelect').value;
-            console.log('Role baru:', role);
+            const role = roleSelect.value;
+            if (!role) {
+                showToast('Pilih role terlebih dahulu.', 'error');
+                return;
+            }
+
+            if (selectedUserId) {
+                const roleEl = document.querySelector(`.user-item[data-user-id="${selectedUserId}"] .role-value`);
+                if (roleEl) {
+                    roleEl.textContent = formatRoleLabel(role);
+                }
+            }
+
             closeRoleModal();
+            showToast(`Role ${selectedUserName} berhasil diubah menjadi ${formatRoleLabel(role)}.`);
         });
 
         // Close modal when clicking outside
         window.addEventListener('click', function(event) {
-            const modal = document.getElementById('roleModal');
-            if (event.target === modal) {
+            if (event.target === roleModal) {
                 closeRoleModal();
             }
         });

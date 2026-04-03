@@ -316,7 +316,7 @@
         }
 
         .btn-action {
-            background: #495057;
+            background: #2f7f4c;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -328,7 +328,7 @@
         }
 
         .btn-action:hover {
-            background: #383d41;
+            background: #26693f;
         }
 
         .btn-export {
@@ -337,6 +337,16 @@
 
         .btn-export:hover {
             background: #1e8449;
+        }
+
+        .export-options {
+            display: none;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .export-options.show {
+            display: flex;
         }
 
         /* Responsive */
@@ -447,7 +457,7 @@
                 <div class="chart-container">
                     <canvas id="targetChart"></canvas>
                 </div>
-                <div style="text-align: center; color: #999; font-size: 40px; font-weight: 700; margin-top: 20px;">67%</div>
+                <div style="text-align: center; color: #1e8449; font-size: 40px; font-weight: 700; margin-top: 20px;">67%</div>
                 <div style="text-align: center; font-size: 13px; color: #666;">Tercapai: 67% | Sisa: 33%</div>
             </div>
 
@@ -470,10 +480,12 @@
 
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <button class="btn-action btn-export" onclick="exportData()">Ekspor ></button>
-            <button class="btn-action" onclick="filterByProvince()">Berdasarkan Kegiatan</button>
-            <button class="btn-action" onclick="filterByName()">Berdasarkan Nama</button>
-            <button class="btn-action" onclick="filterByDate()">Berdasarkan Tanggal/Bulan</button>
+            <button class="btn-action btn-export" id="exportBtn" onclick="toggleExportOptions()">Ekspor ></button>
+            <div class="export-options" id="exportOptions">
+                <button class="btn-action" onclick="filterByProvince()">Berdasarkan Kegiatan</button>
+                <button class="btn-action" onclick="filterByName()">Berdasarkan Nama</button>
+                <button class="btn-action" onclick="filterByDate()">Berdasarkan Tanggal/Bulan</button>
+            </div>
         </div>
     </div>
 
@@ -481,6 +493,8 @@
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.querySelector('.main-content');
+        const exportBtn = document.getElementById('exportBtn');
+        const exportOptions = document.getElementById('exportOptions');
 
         toggleSidebarBtn.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
@@ -495,8 +509,8 @@
                 labels: ['Tercapai', 'Sisa'],
                 datasets: [{
                     data: [67, 33],
-                    backgroundColor: ['#6c757d', '#dee2e6'],
-                    borderColor: ['#6c757d', '#dee2e6'],
+                    backgroundColor: ['#1e8449', '#d8eadf'],
+                    borderColor: ['#1e8449', '#d8eadf'],
                     borderWidth: 2
                 }]
             },
@@ -520,8 +534,8 @@
                 labels: ['Sangat Aktif', 'Tidak Aktif'],
                 datasets: [{
                     data: [60, 40],
-                    backgroundColor: ['#6c757d', '#dee2e6'],
-                    borderColor: ['#6c757d', '#dee2e6'],
+                    backgroundColor: ['#2f7f4c', '#d8eadf'],
+                    borderColor: ['#2f7f4c', '#d8eadf'],
                     borderWidth: 2
                 }]
             },
@@ -546,7 +560,7 @@
                 datasets: [{
                     label: 'Negara',
                     data: [65, 40],
-                    backgroundColor: '#6c757d',
+                    backgroundColor: '#2f7f4c',
                     borderRadius: 5
                 }]
             },
@@ -566,8 +580,9 @@
             }
         });
 
-        function exportData() {
-            alert('Fitur ekspor sedang dalam pengembangan');
+        function toggleExportOptions() {
+            const isShown = exportOptions.classList.toggle('show');
+            exportBtn.textContent = isShown ? 'Tutup Opsi' : 'Ekspor >';
         }
 
         function filterByProvince() {
@@ -584,6 +599,13 @@
             console.log('Filter dari:', startDate, 'sampai:', endDate);
             alert('Fitur filter berdasarkan tanggal sedang dalam pengembangan');
         }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.action-buttons')) {
+                exportOptions.classList.remove('show');
+                exportBtn.textContent = 'Ekspor >';
+            }
+        });
     </script>
 </body>
 </html>
