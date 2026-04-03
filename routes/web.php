@@ -57,7 +57,14 @@ Route::middleware('auth')->group(function () {
         })->name('admin-jamaah.kelompok-itikaf');
 
         Route::get('kelompok-itikaf/buat-jadwal', function () {
-            return view('admin-jamaah.buat-jadwal');
+            $anggota = \App\Models\User::query()
+                ->where('role', 'anggota_jamaah')
+                ->orderBy('nama')
+                ->get(['id', 'nama', 'no_hp']);
+
+            return view('admin-jamaah.buat-jadwal', [
+                'anggota' => $anggota,
+            ]);
         })->name('admin-jamaah.buat-jadwal');
     });
 

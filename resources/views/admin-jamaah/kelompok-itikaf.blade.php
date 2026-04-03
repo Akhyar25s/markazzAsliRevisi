@@ -159,6 +159,30 @@
             font-weight: 600;
         }
 
+        .btn-maps {
+            display: inline-block;
+            background: #26a35a;
+            color: #fff;
+            padding: 7px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .member-count {
+            color: #4e5f54;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #708178;
+            font-style: italic;
+        }
+
         @media (max-width: 900px) {
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); }
@@ -202,14 +226,21 @@
                         <th>Tempat</th>
                         <th>Nama Amir</th>
                         <th>Total Hari</th>
+                        <th>Lokasi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="jadwalBody">
                     <tr>
                         <td>02 Februari 2026</td>
-                        <td>Masjid Al-Ihsan</td>
+                        <td>
+                            Masjid Al-Ihsan
+                            <div class="member-count">3 anggota</div>
+                        </td>
                         <td>A'syim</td>
                         <td>3 Hari</td>
+                        <td>
+                            <a class="btn-maps" href="https://maps.google.com/maps?q=Masjid%20Al%20Ihsan" target="_blank" rel="noopener noreferrer">Lihat Maps</a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -220,11 +251,66 @@
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
+        const jadwalBody = document.getElementById('jadwalBody');
+
+        function formatTanggal(value) {
+            if (!value) {
+                return '-';
+            }
+
+            const date = new Date(value);
+            return date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+            });
+        }
+
+        function createMapsLink(jadwal) {
+            const lokasi = jadwal.lokasiText || jadwal.masjid || 'Masjid';
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lokasi)}`;
+        }
+
+        function createRow(jadwal) {
+            const row = document.createElement('tr');
+            const totalAnggota = Array.isArray(jadwal.anggota) ? jadwal.anggota.length : 0;
+            const lokasiUrl = createMapsLink(jadwal);
+
+            row.innerHTML = `
+                <td>${formatTanggal(jadwal.tanggal)}</td>
+                <td>
+                    ${jadwal.masjid || '-'}
+                    <div class="member-count">${totalAnggota} anggota</div>
+                </td>
+                <td>${jadwal.amir || '-'}</td>
+                <td>${jadwal.totalHari || '-'} Hari</td>
+                <td>
+                    <a class="btn-maps" href="${lokasiUrl}" target="_blank" rel="noopener noreferrer">Lihat Maps</a>
+                </td>
+            `;
+
+            return row;
+        }
+
+        function renderSchedules() {
+            const saved = JSON.parse(localStorage.getItem('itikafSchedules') || '[]');
+
+            if (!Array.isArray(saved) || saved.length === 0) {
+                return;
+            }
+
+            jadwalBody.innerHTML = '';
+            saved.forEach((jadwal) => {
+                jadwalBody.appendChild(createRow(jadwal));
+            });
+        }
 
         toggleSidebarBtn.addEventListener('click', function () {
             sidebar.classList.toggle('collapsed');
             mainContent.classList.toggle('expanded');
         });
+
+        renderSchedules();
     </script>
 </body>
 </html>
