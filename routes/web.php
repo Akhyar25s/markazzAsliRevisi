@@ -30,7 +30,11 @@ Route::middleware('auth')->group(function () {
     // Admin Masjid Routes
     Route::middleware('role:admin_masjid')->prefix('admin-masjid')->group(function () {
         Route::get('kelola-pengguna', function () {
-            return view('admin.kelola-pengguna');
+            $users = \App\Models\User::orderByDesc('id')->get();
+
+            return view('admin.kelola-pengguna', [
+                'users' => $users,
+            ]);
             })->name('admin-masjid.kelola-pengguna');
 
         Route::get('rekap-laporan', function () {

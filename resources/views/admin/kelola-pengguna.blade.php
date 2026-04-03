@@ -246,6 +246,11 @@
             transition: background 0.3s;
         }
 
+        .user-item.expanded {
+            background: #f6fbf7;
+            padding: 24px;
+        }
+
         .user-item:hover {
             background: #f9f9f9;
         }
@@ -254,16 +259,30 @@
             border-bottom: none;
         }
 
+        .user-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
         .user-avatar {
-            width: 80px;
-            height: 80px;
+            width: 56px;
+            height: 56px;
             background: #ddd;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 30px;
             flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .user-item.expanded .user-avatar {
+            width: 88px;
+            height: 88px;
+            font-size: 42px;
         }
 
         .user-info-detail {
@@ -271,20 +290,48 @@
         }
 
         .user-name {
-            font-size: 16px;
+            font-size: 20px;
             font-weight: 600;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 0;
+        }
+
+        .user-item.expanded .user-name {
+            font-size: 24px;
+            margin-bottom: 8px;
         }
 
         .user-detail {
             font-size: 13px;
             color: #666;
             margin-bottom: 3px;
+            display: none;
+        }
+
+        .user-item.expanded .user-detail {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
         }
 
         .user-detail strong {
             color: #333;
+        }
+
+        .user-extra {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #c7ddd0;
+        }
+
+        .user-item.expanded .user-extra {
+            display: block;
+        }
+
+        .user-extra .user-detail {
+            display: block;
+            font-size: 15px;
         }
 
         .user-actions {
@@ -499,48 +546,32 @@
 
         <!-- User List -->
         <div class="user-list" id="userList">
-            <!-- Sample User Items -->
-            <div class="user-item">
-                <div class="user-avatar">👤</div>
-                <div class="user-info-detail">
-                    <div class="user-name">A'syim</div>
-                    <div class="user-detail">No. Hp: <strong>083821234567</strong></div>
-                    <div class="user-detail">Sandi: <strong>Asyimganteng123</strong></div>
+            @forelse($users as $user)
+                <div class="user-item {{ $loop->first ? 'expanded' : '' }}" data-user-id="{{ $user->id }}">
+                    <div class="user-main">
+                        <div class="user-avatar">👤</div>
+                        <div class="user-info-detail">
+                            <div class="user-name">{{ $user->nama }}</div>
+                            <div class="user-detail">No. Hp: <strong>{{ $user->no_hp ?? '-' }}</strong></div>
+                            <div class="user-detail">Sandi: <strong>••••••••••</strong></div>
+                            <div class="user-extra">
+                                <div class="user-detail">Alamat: <strong>{{ $user->alamat ?? '-' }}</strong></div>
+                                <div class="user-detail">Role: <strong>{{ ucwords(str_replace('_', ' ', $user->role ?? '-')) }}</strong></div>
+                                <div class="user-detail">Tanggal daftar: <strong>{{ $user->created_at ? $user->created_at->format('d-m-Y H:i') : '-' }}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-delete" onclick="deleteUser('{{ $user->id }}')">🗑</button>
+                        <button class="btn-role" onclick="openRoleModal('{{ $user->id }}', @js($user->nama), @js($user->role))">Ubah Role</button>
+                        <button class="btn-role btn-toggle-details" onclick="toggleUserDetails('{{ $user->id }}', this)" style="background: #6c757d;">Selengkapnya {{ $loop->first ? '▲' : '▼' }}</button>
+                    </div>
                 </div>
-                <div class="user-actions">
-                    <button class="btn-delete" onclick="deleteUser('1')">🗑</button>
-                    <button class="btn-role" onclick="openRoleModal('1', 'A\'syim', 'Anggota Jamaah')">Ubah Role</button>
-                    <button class="btn-role" onclick="toggleRoleDropdown()" style="background: #6c757d;">Selengkapnya ▼</button>
+            @empty
+                <div class="user-item" style="justify-content: center;">
+                    <div class="user-name">Belum ada data pengguna.</div>
                 </div>
-            </div>
-
-            <div class="user-item">
-                <div class="user-avatar">👤</div>
-                <div class="user-info-detail">
-                    <div class="user-name">Ahyar</div>
-                    <div class="user-detail">No. Hp: <strong>08XXXXXXXXXX</strong></div>
-                    <div class="user-detail">Sandi: <strong>••••••••••</strong></div>
-                </div>
-                <div class="user-actions">
-                    <button class="btn-delete" onclick="deleteUser('2')">🗑</button>
-                    <button class="btn-role" onclick="openRoleModal('2', 'Ahyar', 'Admin Jamaah')">Ubah Role</button>
-                    <button class="btn-role" onclick="toggleRoleDropdown()" style="background: #6c757d;">Selengkapnya ▼</button>
-                </div>
-            </div>
-
-            <div class="user-item">
-                <div class="user-avatar">👤</div>
-                <div class="user-info-detail">
-                    <div class="user-name">Ahmad Muzaki</div>
-                    <div class="user-detail">No. Hp: <strong>08XXXXXXXXXX</strong></div>
-                    <div class="user-detail">Sandi: <strong>••••••••••</strong></div>
-                </div>
-                <div class="user-actions">
-                    <button class="btn-delete" onclick="deleteUser('3')">🗑</button>
-                    <button class="btn-role" onclick="openRoleModal('3', 'Ahmad Muzaki', 'Anggota Jamaah')">Ubah Role</button>
-                    <button class="btn-role" onclick="toggleRoleDropdown()" style="background: #6c757d;">Selengkapnya ▼</button>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 
@@ -577,9 +608,14 @@
         });
 
         function searchUsers() {
-            const searchValue = document.getElementById('searchInput').value;
-            console.log('Mencari user:', searchValue);
-            // TODO: Implementasi search
+            const searchValue = document.getElementById('searchInput').value.toLowerCase().trim();
+            const userItems = document.querySelectorAll('.user-item[data-user-id]');
+
+            userItems.forEach((item) => {
+                const nameText = item.querySelector('.user-name')?.textContent.toLowerCase() || '';
+                const phoneText = item.querySelector('.user-detail strong')?.textContent.toLowerCase() || '';
+                item.style.display = (nameText.includes(searchValue) || phoneText.includes(searchValue)) ? 'flex' : 'none';
+            });
         }
 
         function openRoleModal(userId, userName, currentRole) {
@@ -600,8 +636,21 @@
             }
         }
 
-        function toggleRoleDropdown() {
-            alert('Fitur Selengkapnya belum tersedia');
+        function toggleUserDetails(userId, buttonEl) {
+            const currentItem = document.querySelector(`.user-item[data-user-id="${userId}"]`);
+            if (!currentItem) return;
+
+            const isExpanded = currentItem.classList.contains('expanded');
+
+            document.querySelectorAll('.user-item').forEach(item => item.classList.remove('expanded'));
+            document.querySelectorAll('.btn-toggle-details').forEach(btn => {
+                btn.textContent = 'Selengkapnya ▼';
+            });
+
+            if (!isExpanded) {
+                currentItem.classList.add('expanded');
+                buttonEl.textContent = 'Selengkapnya ▲';
+            }
         }
 
         document.getElementById('roleForm').addEventListener('submit', function(e) {

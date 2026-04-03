@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            DummyDataSeeder::class,
-        ]);
+        // Intentionally left empty.
+        // Jalankan DummyDataSeeder manual hanya saat dibutuhkan:
+        // php artisan db:seed --class=DummyDataSeeder
     }
 }
