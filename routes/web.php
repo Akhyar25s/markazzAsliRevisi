@@ -40,6 +40,20 @@ Route::middleware('auth')->group(function () {
 
     // Admin Jamaah Routes
     Route::middleware('role:admin_jamaah')->prefix('admin-jamaah')->group(function () {
-        // Routes for admin jamaah will be added here
+        Route::get('keaktifan-anggota', function () {
+            return view('admin-jamaah.keaktifan-anggota');
+        })->name('admin-jamaah.keaktifan-anggota');
+
+        Route::get('rekap-laporan', function () {
+            return view('admin-jamaah.rekap-laporan');
+        })->name('admin-jamaah.rekap-laporan');
+
+        Route::get('kelompok-itikaf', function () {
+            return view('admin-jamaah.kelompok-itikaf');
+        })->name('admin-jamaah.kelompok-itikaf');
+
+        Route::get('kelompok-itikaf/buat-jadwal', function () {
+            return view('admin-jamaah.buat-jadwal');
+        })->name('admin-jamaah.buat-jadwal');
     });
 });

@@ -357,8 +357,9 @@
                 <li><a href="{{ route('admin-masjid.kelola-pengguna') }}">Kelola Pengguna</a></li>
                 <li><a href="{{ route('admin-masjid.rekap-laporan') }}">Rekap Laporan</a></li>
             @elseif(Auth::user()->role === 'admin_jamaah')
-                <li><a href="#kelola-jamaah">Kelola Jamaah</a></li>
-                <li><a href="#laporan-jamaah">Laporan Jamaah</a></li>
+                <li><a href="{{ route('admin-jamaah.keaktifan-anggota') }}">Keaktifan Anggota</a></li>
+                <li><a href="{{ route('admin-jamaah.rekap-laporan') }}">Rekap Laporan</a></li>
+                <li><a href="{{ route('admin-jamaah.kelompok-itikaf') }}">Kelompok I'tikaf</a></li>
             @else
                 <li><a href="#absen-kegiatan">Absen Kegiatan</a></li>
                 <li><a href="#absen-itikaf">Absen I'tikaf</a></li>
@@ -462,22 +463,22 @@
 
             @elseif(Auth::user()->role === 'admin_jamaah')
                 <!-- Admin Jamaah Menu -->
-                <a href="#kelola-jamaah" class="menu-card">
+                <a href="{{ route('admin-jamaah.keaktifan-anggota') }}" class="menu-card">
                     <div class="menu-card-icon">👨‍👩‍👧‍👦</div>
-                    <h3>Kelola Jamaah</h3>
-                    <p>Kelola anggota jamaah dan data anggota.</p>
+                    <h3>Keaktifan Anggota</h3>
+                    <p>Pantau tingkat keaktifan anggota jamaah berdasarkan kegiatan.</p>
                 </a>
 
-                <a href="#kelola-kegiatan" class="menu-card">
-                    <div class="menu-card-icon">📅</div>
-                    <h3>Kelola Kegiatan</h3>
-                    <p>Buat dan kelola jadwal kegiatan jamaah.</p>
+                <a href="{{ route('admin-jamaah.rekap-laporan') }}" class="menu-card">
+                    <div class="menu-card-icon">📊</div>
+                    <h3>Rekap Laporan</h3>
+                    <p>Lihat ringkasan laporan aktivitas jamaah berdasarkan periode.</p>
                 </a>
 
-                <a href="#laporan-jamaah" class="menu-card">
-                    <div class="menu-card-icon">📈</div>
-                    <h3>Laporan Jamaah</h3>
-                    <p>Laporan kehadiran dan aktivitas anggota jamaah.</p>
+                <a href="{{ route('admin-jamaah.kelompok-itikaf') }}" class="menu-card">
+                    <div class="menu-card-icon">🕌</div>
+                    <h3>Kelompok I'tikaf</h3>
+                    <p>Kelola jadwal, amir, dan anggota pada kelompok I'tikaf.</p>
                 </a>
 
             @else
